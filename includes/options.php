@@ -76,7 +76,8 @@ function options_general_tab_theme_fields() {
 
 	// Champ riche.
 	$fields[] = Field::make( 'rich_text', 'champ_riche', __( 'Champs WYSIWYG', 'msk-plugin' ) )
-				->set_help_text( __( 'Ce texte d\'aide permet à l\'utilisateur de comprendre l\'intérêt de champ.', 'msk-plugin' ) );
+				->set_help_text( __( 'Ce texte d\'aide permet à l\'utilisateur de comprendre l\'intérêt de champ.', 'msk-plugin' ) )
+				->set_required();
 
 	// Champ <select>.
 	$fields[] = Field::make( 'select', 'champ_select', __( 'Champs menu déroulant', 'msk-plugin' ) )
@@ -142,6 +143,32 @@ function options_advanced_tab_theme_fields() {
 	return $fields;
 }
 add_filter( 'msk_plugin_options_fields_tab_advanced', __NAMESPACE__ . '\\options_advanced_tab_theme_fields', 10 );
+
+/**
+ * Affiche la valeur d'un champ sous la metabox d'onglets
+ *
+ * @return void
+ */
+function display_content_after_fields() {
+	printf(
+		'<hr><div>
+			<h4>%1$s</h4>
+			%2$s
+		</div>',
+		__( 'Valeur du champ "Champ WYSIWYG"', 'msk-plugin' ),
+		\carbon_get_theme_option( 'champ_riche' )
+	);
+
+	printf(
+		'<br><hr><div>
+			<h4>%1$s</h4>
+			%2$s
+		</div>',
+		__( 'Valeur du champ "Champs menu déroulant"', 'msk-plugin' ),
+		\carbon_get_theme_option( 'champ_select' )
+	);
+}
+add_action( 'carbon_fields_container_options_du_plugin_after_fields', __NAMESPACE__ . '\\display_content_after_fields' );
 
 /**
  * Affiche un contenu promotionnel dans la sidebar
