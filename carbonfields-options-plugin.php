@@ -14,18 +14,20 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Charge notre fichier de plugin seulement si CarbonFields est activé
+ * Charge notre dépendance Carbon Fields via Composer
+ */
+function load_carbonfields() {
+	require_once plugin_dir_path( __FILE__ ) . '/vendor/autoload.php';
+	\Carbon_Fields\Carbon_Fields::boot();
+}
+add_action( 'after_setup_theme', __NAMESPACE__ . '\\load_carbonfields' );
+
+/**
+ * Charge notre fichier de plugin
  *
  * @return mixed
  */
 function load_plugin() {
-	$carbonfields_plugin = 'carbon-fields/carbon-fields-plugin.php';
-	$should_load_plugin  = in_array( $carbonfields_plugin, apply_filters( 'active_plugins', get_option( 'active_plugins' ) ) );
-
-	if ( ! apply_filters( 'msk_plugin_should_load', $should_load_plugin ) ) {
-		return;
-	}
-
 	require_once plugin_dir_path( __FILE__ ) . '/includes/options.php';
 }
 add_action( 'plugins_loaded', __NAMESPACE__ . '\\load_plugin' );
